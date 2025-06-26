@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Stations Availability</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 20px;
+            background: #f7f9fc;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #e63946;
+            margin-bottom: 30px;
+        }
+        .stations-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .station-box {
+            background: white;
+            border: 2px solid #e63946;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 6px rgba(230, 57, 70, 0.15);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .station-box:hover {
+            background-color: #e63946;
+            color: white;
+        }
+        .station-header {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul li {
+            padding: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bike Rental Stations</h1>
+
+    <div class="stations-container">
+        {% for station in stations %}
+            <div class="station-box">
+                <div class="station-header">
+                    <span>{{ station.station_id }} — {{ station.location }}</span>
+
+                </div>
+                <p>Available Bikes: {{ station.available_bikes }}</p>
+                <strong>Bikes:</strong>
+                <ul>
+                    {% for bike in station.bikes.all %}
+                        <li>{{ bike.number_plate }} — {{ bike.design }} (Mileage: {{ bike.milage }})</li>
+                    {% empty %}
+                        <li>No bikes available at this station.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% empty %}
+            <p>No stations available.</p>
+        {% endfor %}
+    </div>
+
+    <p style="text-align:center; margin-top: 30px;">
+        <a href="{% url 'home' %}" style="text-decoration:none; color:#e63946;">&larr; Back to Home</a>
+    </p>
+</body>
+</html>

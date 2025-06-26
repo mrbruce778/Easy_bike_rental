@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Universal Feedback</title>
+    <style>
+        .feedback-container {
+            margin: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+        }
+        .feedback-container h3 {
+            color: #e63946;
+        }
+        .feedback-item {
+            background-color: #ffffff;
+            border: 1px solid #e63946;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .feedback-item p {
+            margin: 5px 0;
+        }
+        .feedback-item span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Universal Feedback</h1>
+
+    <div class="feedback-container">
+        {% if feedbacks %}
+            {% for feedback in feedbacks %}
+                <div class="feedback-item">
+                    <p><span>Rating:</span> {{ feedback.rating }} / 5</p>
+                    <p><span>Comments:</span> {{ feedback.comments }}</p>
+                    <p><span>Submitted On:</span> {{ feedback.created_at }}</p> <!-- Assuming you added created_at field -->
+                    {% if feedback.user %}
+                        <p><span>User:</span> {{ feedback.user.username }}</p>
+                    {% else %}
+                        <p><span>Universal Feedback</span></p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No feedback available yet.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

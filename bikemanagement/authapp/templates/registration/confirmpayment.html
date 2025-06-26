@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Payment</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Confirm Payment</h2>
+        <hr>
+        
+        <div class="booking-summary">
+            <h3>Booking Summary</h3>
+            <div class="summary-details">
+                <p><strong>Bike:</strong> {{ bike.number_plate }} ({{ bike.design }})</p>
+                <p><strong>Start Station:</strong> {{ start_station.location }}</p>
+                <p><strong>End Station:</strong> {{ end_station.location }}</p>
+                <p><strong>Fare per hop:</strong> {{ price_per_hop }} Taka</p>
+                <p><strong>Total Amount:</strong> <span class="total-amount">{{ total_amount }}</span> Taka</p>
+            </div>
+        </div>
+
+        <form method="post" action="{% url 'confirm_payment' %}">
+            {% csrf_token %}
+            <!-- Hidden fields to preserve data -->
+            <input type="hidden" name="bike_id" value="{{ bike.number_plate }}">
+            <input type="hidden" name="start_station_id" value="{{ start_station.station_id }}">
+            <input type="hidden" name="end_station_id" value="{{ end_station.station_id }}">
+            <input type="hidden" name="total_amount" value="{{ total_amount }}">
+            <input type="hidden" name="price_per_hop" value="{{ price_per_hop }}">
+
+            <!-- Render Payment Method Form -->
+            {{ payment_form.as_p }}  <!-- This is where the payment form is rendered properly -->
+
+            {% if form.errors %}
+                <div class="error-message">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="action-buttons">
+                <button type="submit" class="confirm-btn">Confirm Payment</button>
+                <a href="{% url 'booking_summary' %}" class="back-btn">Back to Booking</a>
+            </div>
+        </form>
+
+        <div class="home-link">
+            <a href="{% url 'home' %}">← Return to Home</a>
+        </div>
+    </div>
+</body>
+</html>

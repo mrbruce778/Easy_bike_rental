@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Summary</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>Booking Summary</h1>
+            <p class="subtitle">Review your rental details</p>
+        </div>
+
+        <div class="booking-details">
+            {% if bike %}
+                <div class="detail-card">
+                    <div class="detail-row">
+                        <span>Bike:</span>
+                        <strong>{{ bike }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Start Station:</span>
+                        <strong>{{ start_station }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>End Station:</span>
+                        <strong>{{ end_station }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Fare per Hop:</span>
+                        <strong>{{ price_per_hop }} BDT</strong>
+                    </div>
+                    <div class="detail-row total">
+                        <span>Total Amount:</span>
+                        <strong>{{ total_amount }} BDT</strong>
+                    </div>
+                </div>
+
+                <form method="post" class="payment-form">
+                    {% csrf_token %}
+                    <!-- Hidden fields -->
+                    {{ payment_form.as_p }}
+                    <div class="form-actions">
+                        <button type="submit">Confirm Payment →</button>
+                    </div>
+                </form>
+            {% else %}
+                <!-- Initial booking form -->
+                <form method="post" class="booking-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <div class="form-actions">
+                        <button type="submit">Book Now →</button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+
+        <div class="navigation-links">
+            <a href="{% url 'home' %}" class="home-link">← Return to Home</a>
+        </div>
+    </div>
+</body>
+</html>

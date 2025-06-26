@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride History - BikeRental</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-bicycle"></i>
+            <h1>BikeRental</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
+            <a href="{% url 'feedback' %}"><i class="fas fa-comment-alt"></i> Feedback</a>
+            <form action="{% url 'logout' %}" method="post" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="nav-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3>My Account</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>Welcome, {{ user.username }}</h5>
+                        <p>Current Balance: <strong>${{ user_profile.balance }}</strong></p>
+                        {% if user_profile.membership %}
+                            <p>Membership: {{ user_profile.membership|title }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3>Ride History</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if rides %}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Ride #</th>
+                                            <th>Date</th>
+                                            <th>Bike</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Amount</th>
+                                            <th>Payment Method</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ride in rides %}
+                                        <tr>
+                                            <td>{{ ride.ride_no }}</td>
+                                            <td>{{ ride.ride_date|date:"M d, Y H:i" }}</td>
+                                            <td>{{ ride.bike.number_plate }} ({{ ride.bike.design }})</td>
+                                            <td>{{ ride.start_station.location }}</td>
+                                            <td>{{ ride.end_station.location }}</td>
+                                            <td>${{ ride.payment_id.total_amount }}</td>
+                                            <td>{{ ride.payment_id.payment_method }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                You haven't taken any rides yet. 
+                                <a href="{% url 'booking_summary' %}" class="btn btn-primary">Book a ride now</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
